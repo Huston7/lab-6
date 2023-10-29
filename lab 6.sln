@@ -1,25 +1,139 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.7.34024.191
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab 6", "lab 6\lab 6.csproj", "{E646E3DE-97B4-40A5-B20C-297C85667ABB}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E646E3DE-97B4-40A5-B20C-297C85667ABB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E646E3DE-97B4-40A5-B20C-297C85667ABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E646E3DE-97B4-40A5-B20C-297C85667ABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E646E3DE-97B4-40A5-B20C-297C85667ABB}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {2B046537-00D4-47F1-BC02-B26BBBB701AF}
-	EndGlobalSection
-EndGlobal
+﻿using System;
+using System.Collections.Generic;
+
+// Абстрактний клас Vehicle
+public abstract class Vehicle
+{
+    public int Speed { get; set; }
+    public int Capacity { get; set; }
+
+    public abstract void Move();
+}
+
+// Клас Human
+public class Human
+{
+    public int Speed { get; set; }
+
+    public void Move()
+    {
+        Console.WriteLine("Human is moving on foot.");
+    }
+}
+
+// Похідні класи транспортних засобів
+public class Car : Vehicle
+{
+    public Car()
+    {
+        Speed = 100;
+        Capacity = 4;
+    }
+
+    public override void Move()
+    {
+        Console.WriteLine("Car is driving.");
+    }
+}
+
+public class Bus : Vehicle
+{
+    public Bus()
+    {
+        Speed = 60;
+        Capacity = 30;
+    }
+
+    public override void Move()
+    {
+        Console.WriteLine("Bus is driving.");
+    }
+}
+
+public class Train : Vehicle
+{
+    public Train()
+    {
+        Speed = 120;
+        Capacity = 200;
+    }
+
+    public override void Move()
+    {
+        Console.WriteLine("Train is moving on rails.");
+    }
+}
+
+// Клас Route з точками початку та кінця маршруту
+public class Route
+{
+    public string StartPoint { get; set; }
+    public string EndPoint { get; set; }
+
+    public Route(string start, string end)
+    {
+        StartPoint = start;
+        EndPoint = end;
+    }
+}
+
+// Клас TransportNetwork, який управляє транспортом
+public class TransportNetwork
+{
+    private List<Vehicle> vehicles = new List<Vehicle>();
+
+    public void AddVehicle(Vehicle vehicle)
+    {
+        vehicles.Add(vehicle);
+    }
+
+    public void MoveAllVehicles()
+    {
+        foreach (var vehicle in vehicles)
+        {
+            vehicle.Move();
+        }
+    }
+
+    public string CalculateOptimalRoute(Route route, Vehicle vehicle)
+    {
+        // Логіку розрахунку оптимального маршруту залежно від виду транспорту
+        return $"Optimal route from {route.StartPoint} to {route.EndPoint} for {vehicle.GetType().Name} is calculated.";
+    }
+
+    public void LoadPassengers(int numPassengers, Vehicle vehicle)
+    {
+        // Логіка посадки пасажирів
+        Console.WriteLine($"{numPassengers} passengers are loaded onto the {vehicle.GetType().Name}.");
+    }
+
+    public void UnloadPassengers(int numPassengers, Vehicle vehicle)
+    {
+        // Логіка висадки пасажирів
+        Console.WriteLine($"{numPassengers} passengers are unloaded from the {vehicle.GetType().Name}.");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        TransportNetwork network = new TransportNetwork();
+
+        Car car = new Car();
+        Bus bus = new Bus();
+        Train train = new Train();
+
+        network.AddVehicle(car);
+        network.AddVehicle(bus);
+        network.AddVehicle(train);
+
+        network.MoveAllVehicles();
+
+        Route route = new Route("City A", "City B");
+
+        Console.WriteLine(network.CalculateOptimalRoute(route, car));
+        network.LoadPassengers(3, car);
+        network.UnloadPassengers(2, car);
+    }
+}
